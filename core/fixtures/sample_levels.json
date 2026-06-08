@@ -1,0 +1,231 @@
+[
+  {
+    "model": "core.level",
+    "pk": 1,
+    "fields": {
+      "code": "L1",
+      "title": "Day 1 - Dimension 1: Personal Information",
+      "description": "Introducción al presentarse: verb to be, preferences, abilities. Texto de ejemplo y preguntas de comprensión.",
+      "order": 1
+    }
+  },
+  {
+    "model": "core.mission",
+    "pk": 1,
+    "fields": {
+      "title": "Personal Information: Present & Abilities",
+      "description": "Lectura tipo cómic, preguntas de comprensión, ejercicios de gramática y producción escrita.",
+      "level": 1,
+      "order": 1,
+      "unlock_code": ""
+    }
+  },
+  {
+    "model": "core.activity",
+    "pk": 1,
+    "fields": {
+      "mission": 1,
+      "title": "Reading: Comic - Leo",
+      "description": "Texto en formato cómic sobre Leo: nombre, edad, país, gustos y habilidades.",
+      "is_open": true,
+      "max_score": 10
+    }
+  },
+  {
+    "model": "core.question",
+    "pk": 1,
+    "fields": {
+      "activity": 1,
+      "text": "What is his name?",
+      "is_free_text": false
+    }
+  },
+  {
+    "model": "core.answeroption",
+    "pk": 1,
+    "fields": {
+      "question": 1,
+      "text": "Lucas",
+      "is_correct": false
+    }
+  },
+  {
+    "model": "core.answeroption",
+    "pk": 2,
+    "fields": {
+      "question": 1,
+      "text": "Leo",
+      "is_correct": true
+    }
+  },
+  {
+    "model": "core.answeroption",
+    "pk": 3,
+    "fields": {
+      "question": 1,
+      "text": "Liam",
+      "is_correct": false
+    }
+  },
+  {
+    "model": "core.question",
+    "pk": 2,
+    "fields": {
+      "activity": 1,
+      "text": "How old is he?",
+      "is_free_text": false
+    }
+  },
+  {
+    "model": "core.answeroption",
+    "pk": 4,
+    "fields": {
+      "question": 2,
+      "text": "12",
+      "is_correct": false
+    }
+  },
+  {
+    "model": "core.answeroption",
+    "pk": 5,
+    "fields": {
+      "question": 2,
+      "text": "13",
+      "is_correct": true
+    }
+  },
+  {
+    "model": "core.answeroption",
+    "pk": 6,
+    "fields": {
+      "question": 2,
+      "text": "14",
+      "is_correct": false
+    }
+  },
+  {
+    "model": "core.question",
+    "pk": 3,
+    "fields": {
+      "activity": 1,
+      "text": "Where is he from?",
+      "is_free_text": false
+    }
+  },
+  {
+    "model": "core.answeroption",
+    "pk": 7,
+    "fields": {
+      "question": 3,
+      "text": "Brazil",
+      "is_correct": false
+    }
+  },
+  {
+    "model": "core.answeroption",
+    "pk": 8,
+    "fields": {
+      "question": 3,
+      "text": "Peru",
+      "is_correct": true
+    }
+  },
+  {
+    "model": "core.answeroption",
+    "pk": 9,
+    "fields": {
+      "question": 3,
+      "text": "Mexico",
+      "is_correct": false
+    }
+  },
+  {
+    "model": "core.question",
+    "pk": 4,
+    "fields": {
+      "activity": 1,
+      "text": "What can he do?",
+      "is_free_text": false
+    }
+  },
+  {
+    "model": "core.answeroption",
+    "pk": 10,
+    "fields": {
+      "question": 4,
+      "text": "Play football and sing",
+      "is_correct": false
+    }
+  },
+  {
+    "model": "core.answeroption",
+    "pk": 11,
+    "fields": {
+      "question": 4,
+      "text": "Use computers and follow instructions",
+      "is_correct": true
+    }
+  },
+  {
+    "model": "core.answeroption",
+    "pk": 12,
+    "fields": {
+      "question": 4,
+      "text": "Drive a car and swim",
+      "is_correct": false
+    }
+  },
+  {
+    "model": "core.activity",
+    "pk": 2,
+    "fields": {
+      "mission": 1,
+      "title": "Grammar: Mission 1 - Sentence Launch",
+      "description": "Ordenar palabras para formar oraciones correctas (verb to be, present simple).",
+      "is_open": false,
+      "max_score": 10
+    }
+  },
+  {
+    "model": "core.activity",
+    "pk": 3,
+    "fields": {
+      "mission": 1,
+      "title": "Mission 2: Word Recovery Zone",
+      "description": "Rescatar palabras perdidas y completar frases.",
+      "is_open": false,
+      "max_score": 8
+    }
+  },
+  {
+    "model": "core.activity",
+    "pk": 4,
+    "fields": {
+      "mission": 1,
+      "title": "Mission 3: Ship Repair - Error Detection",
+      "description": "Identificar errores en oraciones y corregirlos.",
+      "is_open": false,
+      "max_score": 12
+    }
+  },
+  {
+    "model": "core.activity",
+    "pk": 5,
+    "fields": {
+      "mission": 1,
+      "title": "Writing: Personal Presentation",
+      "description": "Producción escrita: Presentarte y describir tus habilidades. (Free text)",
+      "is_open": true,
+      "max_score": 20
+    }
+  },
+  {
+    "model": "core.question",
+    "pk": 5,
+    "fields": {
+      "activity": 5,
+      "text": "Write a short presentation: name, age, where you're from and 2 abilities.",
+      "is_free_text": true
+    }
+  }
+]
