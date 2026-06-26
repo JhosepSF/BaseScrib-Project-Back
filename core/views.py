@@ -74,6 +74,73 @@ class UserViewSet(viewsets.ModelViewSet):
             'xp': user.xp
         })
 
+    @action(detail=False, methods=['post'])
+    def unlock_outfit(self, request):
+        """Spend coins to unlock a new outfit."""
+        OUTFIT_COSTS = {
+            'm_base': 0, 'f_base': 0,
+            'm_explorer': 30, 'f_explorer': 30,
+            'm_tech': 50, 'f_scientist': 50,
+            'm_commander': 100, 'f_commander': 100,
+        }
+        outfit_id = request.data.get('outfit_id', '')
+        if outfit_id not in OUTFIT_COSTS:
+            return Response({'error': 'Outfit inválido'}, status=400)
+
+        user = cast(User, request.user)
+        if user.role != User.STUDENT:
+            return Response({'error': 'Solo estudiantes pueden canjear outfits'}, status=403)
+
+        try:
+            profile = user.student_profile
+        except StudentProfile.DoesNotExist:
+            profile = StudentProfile.objects.create(user=user, unlocked_outfits=['m_base', 'f_base'])
+
+        unlocked = list(profile.unlocked_outfits or ['m_base', 'f_base'])
+        if outfit_id in unlocked:
+            return Response({'error': 'Ya tienes este outfit desbloqueado'}, status=400)
+
+        cost = OUTFIT_COSTS[outfit_id]
+        if user.coins < cost:
+            return Response({'error': f'Monedas insuficientes. Necesitas {cost} 🪙, tienes {user.coins} 🪙'}, status=400)
+
+        # Deduct coins and unlock
+        user.coins -= cost
+        user.save()
+        unlocked.append(outfit_id)
+        profile.unlocked_outfits = unlocked
+        profile.save()
+
+        # Record transaction
+        CoinTransaction.objects.create(student=user, amount=-cost, reason=f'Outfit desbloqueado: {outfit_id}')
+
+        return Response({
+            'status': 'outfit unlocked',
+            'outfit_id': outfit_id,
+            'coins': user.coins,
+            'unlocked_outfits': unlocked,
+        })
+
+    @action(detail=False, methods=['post'])
+    def select_outfit(self, request):
+        """Change the active selected outfit (must be already unlocked)."""
+        outfit_id = request.data.get('outfit_id', '')
+        user = cast(User, request.user)
+
+        try:
+            profile = user.student_profile
+        except StudentProfile.DoesNotExist:
+            return Response({'error': 'Perfil no encontrado'}, status=404)
+
+        unlocked = list(profile.unlocked_outfits or ['m_base', 'f_base'])
+        if outfit_id not in unlocked:
+            return Response({'error': 'Outfit no desbloqueado'}, status=403)
+
+        profile.selected_outfit = outfit_id
+        profile.save()
+        return Response({'status': 'outfit selected', 'selected_outfit': outfit_id})
+
+
 
 
 class StudentViewSet(viewsets.ReadOnlyModelViewSet):

@@ -43,9 +43,13 @@ class StudentProfile(models.Model):
     level = models.CharField(max_length=64, blank=True)
     unlocked_missions = models.ManyToManyField('Mission', blank=True, related_name='unlocked_by')
     avatar = models.CharField(max_length=128, blank=True)
+    # Outfit system
+    unlocked_outfits = models.JSONField(default=list, blank=True)   # e.g. ["m_base","f_base","m_explorer"]
+    selected_outfit = models.CharField(max_length=64, default='m_base')
 
     def __str__(self):
         return self.user.username
+
 
 
 class TeacherProfile(models.Model):

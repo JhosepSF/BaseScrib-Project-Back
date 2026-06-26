@@ -22,14 +22,29 @@ from .models import (
 
 class UserSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True, required=True, min_length=8)
+    unlocked_outfits = serializers.SerializerMethodField()
+    selected_outfit = serializers.SerializerMethodField()
 
     class Meta:
         model = User
-        fields = ['id', 'username', 'email', 'first_name', 'last_name', 'role', 'coins', 'xp', 'password']
+        fields = ['id', 'username', 'email', 'first_name', 'last_name', 'role', 'coins', 'xp', 'password',
+                  'unlocked_outfits', 'selected_outfit']
         extra_kwargs = {
             'coins': {'read_only': True},
             'xp': {'read_only': True},
         }
+
+    def get_unlocked_outfits(self, obj):
+        try:
+            return obj.student_profile.unlocked_outfits or ['m_base', 'f_base']
+        except Exception:
+            return ['m_base', 'f_base']
+
+    def get_selected_outfit(self, obj):
+        try:
+            return obj.student_profile.selected_outfit or 'm_base'
+        except Exception:
+            return 'm_base'
 
     def create(self, validated_data):
         password = validated_data.pop('password')
@@ -37,7 +52,7 @@ class UserSerializer(serializers.ModelSerializer):
         user.set_password(password)
         user.save()
         if user.role == User.STUDENT:
-            StudentProfile.objects.create(user=user)
+            StudentProfile.objects.create(user=user, unlocked_outfits=['m_base', 'f_base'])
         elif user.role == User.TEACHER:
             TeacherProfile.objects.create(user=user)
         return user
@@ -61,7 +76,8 @@ class ClassroomSerializer(serializers.ModelSerializer):
 class StudentProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = StudentProfile
-        fields = ['id', 'user', 'classroom', 'level', 'avatar', 'unlocked_missions']
+        fields = ['id', 'user', 'classroom', 'level', 'avatar', 'unlocked_missions',
+                  'unlocked_outfits', 'selected_outfit']
 
 
 class TeacherProfileSerializer(serializers.ModelSerializer):
@@ -98,10 +114,11 @@ class QuestionSerializer(serializers.ModelSerializer):
 
 class ActivitySerializer(serializers.ModelSerializer):
     questions = QuestionSerializer(many=True, read_only=True)
+    day_num = serializers.IntegerField(source='mission.level.order', read_only=True)
 
     class Meta:
         model = Activity
-        fields = ['id', 'mission', 'title', 'description', 'is_open', 'max_score', 'questions']
+        fields = ['id', 'mission', 'day_num', 'title', 'description', 'is_open', 'max_score', 'questions']
 
 
 class WritingSubmissionSerializer(serializers.ModelSerializer):
